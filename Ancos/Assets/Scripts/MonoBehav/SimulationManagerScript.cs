@@ -29,12 +29,15 @@ public class SimulationManagerScript : MonoBehaviour
         daftarKota = GameObject.FindGameObjectsWithTag("kota");
 
         // membuat daftar model kota
-        foreach (GameObject kota in daftarKota)
+        for (int i = 0; i < daftarKota.Length; i++)
         {
             ModelKota m = new ModelKota()
             {
-                namaKota = kota.name,
-                koordinatKota = kota.transform.position
+                indexKota = i ,
+                namaKota = daftarKota[i].name,
+                transformKota = daftarKota[i].transform,
+                koordinatKota = daftarKota[i].transform.position
+
             };
             kotaList.Add(m);
         }
@@ -44,7 +47,7 @@ public class SimulationManagerScript : MonoBehaviour
             agents.Add(semut.GetComponent<MyAgent>());
         }
 
-        UpdateNextKota();
+        UpdateNextKota(kotaTarget);
 
 
 
@@ -92,35 +95,52 @@ public class SimulationManagerScript : MonoBehaviour
             pheromoneGlobal.Add(phe);
         }
 
-        ancos = new ANCOS(jarakAntarKota, Constanta.beta);
+        ancos = new ANCOS(jarakAntarKota, 
+            Constanta.beta, 
+            kotaList,
+            inversJarakAntarKota,
+            pheromoneGlobal,
+            kotaTarget);
     }
     
     private void Update()
     {
         for (int i = 0; i < agents.Count; i++)
         {
-            if (JarakAgentKeKota(agents[i].transform, daftarKota[kotaTarget].transform))
+            if (ancos.kotanotvisited.Count == 0)
             {
-                UpdateNextKota();
+                ancos.kotanotvisited = kotaList;
+                pheromoneGlobal = ancos.pheLoc;
+                ancos.pheGlo = pheromoneGlobal;
+                ancos.pheLoc = pheromoneGlobal;
+            }
+            if (JarakAgentKeKota(agents[i].transform.position, kotaList[kotaTarget].koordinatKota))
+            {
+                nextKota();
+                UpdateNextKota(kotaTarget);
             }
         }
     }
 
-    void UpdateNextKota()
+    void nextKota()
     {
-        kotaTarget++;
-        kotaTarget %= kotaList.Count;
+        kotaTarget = ancos.nextCity(kotaTarget);
+    }
 
+    void UpdateNextKota(int kotaTarget)
+    {
+  
         for (int i = 0; i < agents.Count; i++)
         {
-            agents[i].GetComponent<MyAgent>().target = 
-                daftarKota[kotaTarget].transform;
+         agents[i].GetComponent<MyAgent>().target =
+                    kotaList[kotaTarget].transformKota;
+            
         }
     }
 
-    bool JarakAgentKeKota(Transform _agent, Transform _target)
+    bool JarakAgentKeKota(Vector3 _agent, Vector3 _target)
     {
-        return Vector3.Distance(_agent.position, _target.position) < 3;
+        return Vector3.Distance(_agent, _target) < 3;
     }
 
     

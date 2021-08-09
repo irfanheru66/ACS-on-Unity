@@ -10,7 +10,13 @@ public class DataManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        simScript = GetComponent<SimulationManagerScript>();
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+/*        simScript = GetComponent<SimulationManagerScript>();
 
         GetAllJarak();
 
@@ -22,13 +28,7 @@ public class DataManagerScript : MonoBehaviour
                 Debug.Log("jarak dari " + (i + 1) + " - " + (j + 1) + " : " + jarakAntarKota[i][j]);
             }
             Debug.Log("----------------");
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        }*/
     }
 
     void GetAllJarak()

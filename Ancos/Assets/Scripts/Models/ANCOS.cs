@@ -6,22 +6,40 @@ public class ANCOS
 {
     
     #region Attribut
-    private int beta;
+    private int _beta;
+    public int kotaNow;
     private List<List<float>> jarakAntarKota = new List<List<float>>();
-    // List dari kota-kota yang sudah disinggahi
-    List<GameObject> kotaDisinggahi = new List<GameObject>();
+    private List<ModelKota> kotaNotVisited = new List<ModelKota>();
+    private List<List<float>> invers = new List<List<float>>();
+    private List<List<float>> phe;
+    private List<List<float>> _phe;
+    private int C;
 
-    // List dari kota-kota yang masih BELUM disinggahi
-    List<GameObject> kotaBelumDisinggahi = new List<GameObject>();
     #endregion
 
     #region Properties
-    public int Beta { get { return this.beta; } set { this.beta = value; } }
+    public int Beta { get { return this._beta; } set { this._beta = value; } }
     public List<List<float>> JarakAntarKota
     {
         set { this.jarakAntarKota = value; }
         
         private get { return this.jarakAntarKota; }
+    }
+    public List<ModelKota> kotanotvisited
+    {
+        set { kotaNotVisited = value.GetRange(0, value.Count); }
+        get { return kotaNotVisited; }
+    }
+
+    public List<List<float>> pheLoc
+    {
+        set { _phe = value.GetRange(0, value.Count); }
+        get { return this._phe; }
+    }
+    public List<List<float>> pheGlo
+    {
+        set { phe = value; }
+        get { return this.phe; }
     }
     #endregion
 
@@ -31,33 +49,130 @@ public class ANCOS
     //{
 
     //}
+    private float getTemp(float phe, float invers)
+    {
+        return phe * Mathf.Pow(invers, Beta);
+    }
+
+    private float getProb(float temp, float sumTemp)
+    {
+        return temp / sumTemp;
+    }
+
+    private float sum(List<float> arr)
+    {
+        float sums = 0;
+
+        foreach (var item in arr)
+        {
+            sums += item;
+        }
+        return sums;
+    }
+
+    private float deltaPhe(float lnm, int c)
+    {
+        return 1 / (lnm * c);
+    }
+
+    private float newPhe(float _phe,float lnm, int c) 
+    {
+        return (1 - Constanta.P) * _phe + Constanta.P * deltaPhe(lnm, c); 
+    }
+
     #endregion
 
+
+
+
+
     #region Public Function
-    public double CalculateTemporary(int _indexI, int _indexJ, List<List<float>> _phe, int _beta
-        , List<List<float>> _inv)
-    {
-        return _phe[_indexI][_indexJ] * Mathf.Pow(_inv[_indexI][_indexJ], 2);
-    }
 
-    public double CalculateProbability(int _indI, int _indJ, List<List<float>> _phe, int _beta
-        , List<List<float>> _inv)
+    public int nextCity(int _kotanow)
     {
-        return CalculateTemporary(_indI, _indJ, _phe, _beta, _inv);
-    }
 
-    public int GetNextKota()
-    {
-        return 0;
+        for (int i = 0; i < kotaNotVisited.Count; i++)
+        {
+            if (_kotanow == kotaNotVisited[i].indexKota)
+            {
+                kotaNotVisited.RemoveAt(i);
+                break;
+            }
+        }
+
+        int kotaNow = _kotanow;
+        List<int> _index = new List<int>();
+        List<float> _temps = new List<float>();
+        List<float> _prob = new List<float>();
+        float q = Random.Range(0.0f, 1.0f);
+        int iKota = 0;
+        Debug.Log(q);
+
+        foreach (var item in kotaNotVisited)
+        {
+            _index.Add(item.indexKota);
+            _temps.Add(getTemp(phe[kotaNow][item.indexKota], invers[kotaNow][item.indexKota]));
+            Debug.Log(getTemp(phe[kotaNow][item.indexKota], invers[kotaNow][item.indexKota]));
+        }
+
+/*        Debug.Log(_temps.IndexOf(Mathf.Max(_temps.ToArray())));
+        Debug.Log(_index[_temps.IndexOf(Mathf.Max(_temps.ToArray()))]);*/
+        
+        
+        if (q <= Constanta.q0)
+        {
+            /*Debug.Log(_index[_temps.IndexOf(Mathf.Max(_temps.ToArray()))]);*/
+            iKota = _index[_temps.IndexOf(Mathf.Max(_temps.ToArray()))];
+        }
+        else
+        {
+            float sumTemp = sum(_temps);
+            foreach (var item in _temps)
+            {
+                _prob.Add(getProb(item, sumTemp));
+                Debug.Log(getProb(item, sumTemp));
+            }
+            /*Debug.Log(_prob.IndexOf(Mathf.Max(_prob.ToArray())));*/
+            iKota = _index[_prob.IndexOf(Mathf.Max(_prob.ToArray()))];
+        }
+
+        float _newPhe = newPhe(phe[kotaNow][iKota], JarakAntarKota[kotaNow][iKota], C);
+        _phe[kotaNow][iKota] = phe[kotaNow][iKota] + _newPhe;
+        _phe[iKota][kotaNow] = phe[iKota][kotaNow] + _newPhe;
+
+        foreach (var items in _phe)
+        {
+            string msg = "";
+            foreach (var item in items)
+            {
+                msg += item + " | ";
+            }
+            Debug.Log(msg);
+        }
+        Debug.Log(iKota);
+        return iKota;
     }
     #endregion
     #endregion
 
     #region Constructor
-    public ANCOS(List<List<float>> _jarakkota, int _beta)
+
+    public ANCOS(List<List<float>> jarakAntarKota, 
+        int beta, 
+        List<ModelKota> kotaList, 
+        List<List<float>> inversJarakAntarKota, 
+        List<List<float>> pheromoneGlobal, 
+        int kotaTarget)
     {
-        this.jarakAntarKota = _jarakkota;
-        this.beta = _beta;
+        this.jarakAntarKota = jarakAntarKota;
+        Beta = beta;
+        this.C = kotaList.Count;
+        this.kotaNotVisited = kotaList.GetRange(0,kotaList.Count);
+        this.invers = inversJarakAntarKota;
+        this.phe = pheromoneGlobal;
+        this._phe = pheromoneGlobal.GetRange(0, pheromoneGlobal.Count); 
+        this.kotaNow = kotaTarget;
     }
+
     #endregion
 }

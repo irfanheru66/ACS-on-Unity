@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class ModelKota
 {
+    public int indexKota;
     public string namaKota;
     public Vector3 koordinatKota;
+    public Transform transformKota;
 }
