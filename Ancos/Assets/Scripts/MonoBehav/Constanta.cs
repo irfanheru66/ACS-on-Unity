@@ -12,7 +12,7 @@ public class Constanta
         get { return 1 - q0; }
     }
 
-    public static IEnumerator ExportToExcel(string _namaFile, string _data)
+    public static IEnumerator ExportToCSVS(string _namaFile, string _data)
     {
         // tentukan dulu alamat file
         string alamatFile =
@@ -81,9 +81,10 @@ public class Constanta
         streamData.Close();
 
         // coroutine
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2.0f);
 
         // kalau mau dibuka langsung file
         //Application.OpenURL(alamatFile);
     }
+
 }

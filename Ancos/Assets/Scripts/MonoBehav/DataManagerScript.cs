@@ -1,51 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
-public class DataManagerScript : MonoBehaviour
+
+public class DataManagerScript
 {
-    SimulationManagerScript simScript;
-    public List<List<float>> jarakAntarKota = new List<List<float>>();
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
-    void Update()
+    public IEnumerator ExportToCSV(string _namaFile, List<List<float>> _data)
     {
-/*        simScript = GetComponent<SimulationManagerScript>();
+        // tentukan dulu alamat file
+        Debug.Log("yes");
 
-        GetAllJarak();
+        string alamatFile =
+            Application.dataPath.Replace("/Assets", "") + "/" + _namaFile + ".csv";
 
-        for (int i = 0; i < jarakAntarKota.Count; i++)
+        // <optional> ngecek apakah file sudah ada
+/*        if (File.Exists(alamatFile))
+            File.Delete(alamatFile);
+*/
+        // objek stream
+        var streamData = File.CreateText(alamatFile);
+
+        #region Isiin DATA
+        string data = string.Empty;
+        data += _namaFile + System.Environment.NewLine;
+
+        foreach (var items in _data)
         {
-            Debug.Log("baris ke-" + (i + 1));
-            for (int j = 0; j < jarakAntarKota[i].Count; j++)
+            foreach (var item in items)
             {
-                Debug.Log("jarak dari " + (i + 1) + " - " + (j + 1) + " : " + jarakAntarKota[i][j]);
+                Debug.Log(item);
+                data += item + ",";
             }
-            Debug.Log("----------------");
-        }*/
-    }
-
-    void GetAllJarak()
-    {
-        GameObject[] kota = simScript.daftarKota;
-
-        for (int i = 0; i < kota.Length; i++)
-        {
-            List<float> _jarak = new List<float>();
-
-            for (int j = 0; j < kota.Length; j++)
-            {
-                float jarak = Vector3.Distance(kota[i].transform.position, kota[j].transform.position);
-                _jarak.Add(jarak);
-            }
-
-            jarakAntarKota.Add(_jarak);
+            data += System.Environment.NewLine;
         }
+
+        #endregion
+        streamData.WriteLine(data);
+        // tutup stream-nya
+        streamData.Close();
+
+        // coroutine
+        yield return new WaitForSeconds(2.0f);
+
+        // kalau mau dibuka langsung file
+        //Application.OpenURL(alamatFile);
     }
+
 }

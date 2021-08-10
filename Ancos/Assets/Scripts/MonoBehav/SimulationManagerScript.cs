@@ -21,6 +21,7 @@ public class SimulationManagerScript : MonoBehaviour
     public List<List<float>> inversJarakAntarKota = new List<List<float>>();
     public List<List<float>> pheromoneGlobal = new List<List<float>>();
     private ANCOS ancos;
+    private DataManagerScript dms = new DataManagerScript();
 
     // Start is called before the first frame update
     void Start()
@@ -68,6 +69,9 @@ public class SimulationManagerScript : MonoBehaviour
             
             jarakAntarKota.Add(jarak);
         }
+        StartCoroutine(ExportToCSV("JarakAntarKota", jarakAntarKota));
+        
+
 
         // hitung invers
         for (int i = 0; i < daftarKota.Length; i++)
@@ -81,6 +85,7 @@ public class SimulationManagerScript : MonoBehaviour
 
             inversJarakAntarKota.Add(_invers);
         }
+        StartCoroutine(ExportToCSV("InversJarakAntarKota", inversJarakAntarKota));
 
         for (int i = 0; i < daftarKota.Length; i++)
         {
@@ -93,6 +98,7 @@ public class SimulationManagerScript : MonoBehaviour
 
             pheromoneGlobal.Add(phe);
         }
+        StartCoroutine(ExportToCSV("PheromoneGlobalAwal", pheromoneGlobal));
         debug(pheromoneGlobal);
         /*ancos = new ANCOS(jarakAntarKota, 
             Constanta.beta, 
@@ -119,6 +125,8 @@ public class SimulationManagerScript : MonoBehaviour
     
     private void Update()
     {
+
+        
         for (int i = 0; i < agents.Count; i++)
         {
             if (agentsModel[i].Ancos.kotanotvisited.Count == 0)
@@ -135,16 +143,19 @@ public class SimulationManagerScript : MonoBehaviour
                     ANCOS.tourTerpendek = agentsModel[i].Ancos.kotaVisited;
                     agentsModel[i].Ancos.kotaVisited = new List<string>();
                 }
+                
                 Debug.Log("jarak Terpendek saat ini = " + ANCOS.lgb);
                 string _msg = "";
                 foreach (string item in ANCOS.tourTerpendek)
                 {
                     _msg += item + " -> ";
                 }
+                StartCoroutine(Constanta.ExportToCSVS("LGB", "LGB Terpendek saat ini adalah: " + ANCOS.lgb + " " + _msg));
                 Debug.Log(_msg);
  
                 Debug.Log("----------------semut ke-" + i + " -----------------");
                 debug(pheromoneGlobal);
+                StartCoroutine(ExportToCSV("PheromoneGlobalTerakhir", pheromoneGlobal));
             }
             else if (JarakAgentKeKota(agents[i].transform.position, kotaList[agentsModel[i].kotaNow].koordinatKota))
             {
@@ -210,5 +221,48 @@ public class SimulationManagerScript : MonoBehaviour
         return Vector3.Distance(_agent, _target) < 3;
     }
 
-    
+    IEnumerator ExportToCSV(string _namaFile, List<List<float>> _data)
+    {
+        // tentukan dulu alamat file
+        Debug.Log("yes");
+
+        string alamatFile =
+            Application.dataPath.Replace("/Assets", "") + "/" + _namaFile + ".csv";
+
+        // <optional> ngecek apakah file sudah ada
+        /*        if (File.Exists(alamatFile))
+                    File.Delete(alamatFile);
+        */
+        // objek stream
+        var streamData = File.CreateText(alamatFile);
+
+        #region Isiin DATA
+        string data = string.Empty;
+        data += _namaFile + System.Environment.NewLine;
+
+        foreach (var items in _data)
+        {
+            foreach (var item in items)
+            {
+                Debug.Log(item);
+                data += item + " ,";
+            }
+            data += System.Environment.NewLine;
+        }
+
+        #endregion
+        streamData.WriteLine(data);
+        // tutup stream-nya
+        streamData.Close();
+
+        // coroutine
+        yield return new WaitForSeconds(2.0f);
+
+        // kalau mau dibuka langsung file
+        //Application.OpenURL(alamatFile);
+    }
+
+
+
+
 }
