@@ -127,6 +127,22 @@ public class SimulationManagerScript : MonoBehaviour
                 pheromoneGlobal = matAdd(pheromoneGlobal, agentsModel[i].Ancos.pheLoc);
                 agentsModel[i].Ancos.pheGlo = pheromoneGlobal;
                 agentsModel[i].Ancos.pheLoc = pheromoneGlobal;
+                if (agentsModel[i].Ancos.sumLnm < ANCOS.lgb)
+                {
+                    ANCOS.lgb = agentsModel[i].Ancos.sumLnm;
+                    agentsModel[i].Ancos.sumLnm = 0;
+
+                    ANCOS.tourTerpendek = agentsModel[i].Ancos.kotaVisited;
+                    agentsModel[i].Ancos.kotaVisited = new List<string>();
+                }
+                Debug.Log("jarak Terpendek saat ini = " + ANCOS.lgb);
+                string _msg = "";
+                foreach (string item in ANCOS.tourTerpendek)
+                {
+                    _msg += item + " -> ";
+                }
+                Debug.Log(_msg);
+ 
                 Debug.Log("----------------semut ke-" + i + " -----------------");
                 debug(pheromoneGlobal);
             }

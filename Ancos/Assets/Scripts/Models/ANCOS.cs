@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class ANCOS
 {
-    
+
     #region Attribut
+    public static float lgb = Mathf.Infinity;
+    public static List<string> tourTerpendek;
     private int _beta;
     public int kotaNow;
     private List<List<float>> jarakAntarKota = new List<List<float>>();
@@ -13,12 +15,14 @@ public class ANCOS
     private List<List<float>> invers = new List<List<float>>();
     private List<List<float>> phe;
     private List<List<float>> _phe;
+    public float sumLnm = 0;
     private int C;
-
+    public List<string> kotaVisited = new List<string>();
     #endregion
 
     #region Properties
     public int Beta { get { return this._beta; } set { this._beta = value; } }
+    
     public List<List<float>> JarakAntarKota
     {
         set { this.jarakAntarKota = value; }
@@ -91,10 +95,14 @@ public class ANCOS
     public int nextCity(int _kotanow)
     {
 
+
         for (int i = 0; i < kotaNotVisited.Count; i++)
         {
             if (_kotanow == kotaNotVisited[i].indexKota)
             {
+                string namaKota = kotaNotVisited[i].namaKota;
+                Debug.Log(namaKota);
+                kotaVisited.Add(namaKota);
                 kotaNotVisited.RemoveAt(i);
                 break;
             }
@@ -140,15 +148,16 @@ public class ANCOS
         _phe[kotaNow][iKota] = phe[kotaNow][iKota] + _newPhe;
         _phe[iKota][kotaNow] = phe[iKota][kotaNow] + _newPhe;
 
-/*        foreach (var items in _phe)
-        {
-            string msg = "";
-            foreach (var item in items)
-            {
-                msg += item + " | ";
-            }
-            Debug.Log(msg);
-        }*/
+        /*        foreach (var items in _phe)
+                {
+                    string msg = "";
+                    foreach (var item in items)
+                    {
+                        msg += item + " | ";
+                    }
+                    Debug.Log(msg);
+                }*/
+        sumLnm += JarakAntarKota[kotaNow][iKota];
         Debug.Log(iKota);
         return iKota;
     }
