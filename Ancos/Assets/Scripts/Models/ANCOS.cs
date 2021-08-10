@@ -33,12 +33,12 @@ public class ANCOS
 
     public List<List<float>> pheLoc
     {
-        set { _phe = value.GetRange(0, value.Count); }
+        set { _phe = cloning(value); }
         get { return this._phe; }
     }
     public List<List<float>> pheGlo
     {
-        set { phe = value; }
+        set { phe = cloning(value);  }
         get { return this.phe; }
     }
     #endregion
@@ -112,7 +112,7 @@ public class ANCOS
         {
             _index.Add(item.indexKota);
             _temps.Add(getTemp(phe[kotaNow][item.indexKota], invers[kotaNow][item.indexKota]));
-            Debug.Log(getTemp(phe[kotaNow][item.indexKota], invers[kotaNow][item.indexKota]));
+            /*Debug.Log(getTemp(phe[kotaNow][item.indexKota], invers[kotaNow][item.indexKota]));*/
         }
 
 /*        Debug.Log(_temps.IndexOf(Mathf.Max(_temps.ToArray())));
@@ -140,7 +140,7 @@ public class ANCOS
         _phe[kotaNow][iKota] = phe[kotaNow][iKota] + _newPhe;
         _phe[iKota][kotaNow] = phe[iKota][kotaNow] + _newPhe;
 
-        foreach (var items in _phe)
+/*        foreach (var items in _phe)
         {
             string msg = "";
             foreach (var item in items)
@@ -148,9 +148,24 @@ public class ANCOS
                 msg += item + " | ";
             }
             Debug.Log(msg);
-        }
+        }*/
         Debug.Log(iKota);
         return iKota;
+    }
+
+    private List<List<float>> cloning(List<List<float>> arr1) {
+        List<List<float>> clone = new List<List<float>>();
+        foreach (var items in arr1)
+        {
+            List<float> floats = new List<float>();
+            foreach (var item in items)
+            {
+                floats.Add(item);
+            }
+            clone.Add(floats);
+        }
+        return clone;
+
     }
     #endregion
     #endregion
@@ -169,9 +184,10 @@ public class ANCOS
         this.C = kotaList.Count;
         this.kotaNotVisited = kotaList.GetRange(0,kotaList.Count);
         this.invers = inversJarakAntarKota;
-        this.phe = pheromoneGlobal;
-        this._phe = pheromoneGlobal.GetRange(0, pheromoneGlobal.Count); 
+        this.phe = cloning(pheromoneGlobal);
+        this._phe = cloning(pheromoneGlobal);
         this.kotaNow = kotaTarget;
+        Debug.Log(kotaNow);
     }
 
     #endregion

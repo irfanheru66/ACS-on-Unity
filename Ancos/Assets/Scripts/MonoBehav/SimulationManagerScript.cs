@@ -14,9 +14,9 @@ public class SimulationManagerScript : MonoBehaviour
 {
     public GameObject[] daftarKota;
     public List<ModelKota> kotaList = new List<ModelKota>();
-    private int kotaTarget = 0;
     [SerializeField] List<MyAgent> agents = new List<MyAgent>();
-    
+    [SerializeField] List<ModelAgent> agentsModel = new List<ModelAgent>();
+
     public List<List<float>> jarakAntarKota = new List<List<float>>();
     public List<List<float>> inversJarakAntarKota = new List<List<float>>();
     public List<List<float>> pheromoneGlobal = new List<List<float>>();
@@ -42,12 +42,11 @@ public class SimulationManagerScript : MonoBehaviour
             kotaList.Add(m);
         }
 
-        foreach (GameObject semut in GameObject.FindGameObjectsWithTag("agent"))
-        {
-            agents.Add(semut.GetComponent<MyAgent>());
-        }
+        /* foreach (GameObject semut in GameObject.FindGameObjectsWithTag("agent"))
+         {
+             agents.Add(semut.GetComponent<MyAgent>());
+         }*/
 
-        UpdateNextKota(kotaTarget);
 
 
 
@@ -94,48 +93,100 @@ public class SimulationManagerScript : MonoBehaviour
 
             pheromoneGlobal.Add(phe);
         }
-
-        ancos = new ANCOS(jarakAntarKota, 
+        debug(pheromoneGlobal);
+        /*ancos = new ANCOS(jarakAntarKota, 
             Constanta.beta, 
             kotaList,
             inversJarakAntarKota,
             pheromoneGlobal,
-            kotaTarget);
+            kotaTarget);*/
+        GameObject[] semut = GameObject.FindGameObjectsWithTag("agent");
+        for (int i = 0; i < semut.Length; i++)
+        {
+            agents.Add(semut[i].GetComponent<MyAgent>());
+            ancos = new ANCOS(jarakAntarKota,
+            Constanta.beta,
+            kotaList,
+            inversJarakAntarKota,
+            pheromoneGlobal,
+            i);
+            agentsModel.Add(new ModelAgent(i, ancos,i));
+            UpdateNextKota(i,i);
+        }
+
+        
     }
     
     private void Update()
     {
         for (int i = 0; i < agents.Count; i++)
         {
-            if (ancos.kotanotvisited.Count == 0)
+            if (agentsModel[i].Ancos.kotanotvisited.Count == 0)
             {
-                ancos.kotanotvisited = kotaList;
-                pheromoneGlobal = ancos.pheLoc;
-                ancos.pheGlo = pheromoneGlobal;
-                ancos.pheLoc = pheromoneGlobal;
+                agentsModel[i].Ancos.kotanotvisited = kotaList;
+                pheromoneGlobal = matAdd(pheromoneGlobal, agentsModel[i].Ancos.pheLoc);
+                agentsModel[i].Ancos.pheGlo = pheromoneGlobal;
+                agentsModel[i].Ancos.pheLoc = pheromoneGlobal;
+                Debug.Log("----------------semut ke-" + i + " -----------------");
+                debug(pheromoneGlobal);
             }
-            if (JarakAgentKeKota(agents[i].transform.position, kotaList[kotaTarget].koordinatKota))
+            else if (JarakAgentKeKota(agents[i].transform.position, kotaList[agentsModel[i].kotaNow].koordinatKota))
             {
-                nextKota();
-                UpdateNextKota(kotaTarget);
+                nextKota(i);
+                UpdateNextKota(i, agentsModel[i].kotaNow);
             }
         }
     }
 
-    void nextKota()
+    private List<List<float>> 
+        matAdd(List<List<float>> arr1, List<List<float>> arr2) 
     {
-        kotaTarget = ancos.nextCity(kotaTarget);
+        List<List<float>> res = 
+            new List<List<float>>();
+
+        for (int i = 0; i < arr1.Count; i++)
+        {
+            List<float> add = new List<float>();
+            for (int j = 0; j < arr1.Count; j++)
+            {
+                if (arr1[i][j] == arr2[i][j])
+                {
+                    add.Add(arr1[i][j]);
+                }
+                else
+                {
+                    add.Add(arr1[i][j] + arr2[i][j]);
+                }
+            }
+            res.Add(add);
+        }
+        return res;
     }
 
-    void UpdateNextKota(int kotaTarget)
+    void debug(List<List<float>> arr)
     {
-  
-        for (int i = 0; i < agents.Count; i++)
+        foreach (var items in arr)
         {
+            string msg = "";
+            foreach (var item in items)
+            {
+                msg += item + " | ";
+            }
+            Debug.Log(msg);
+
+        }
+    }
+    void nextKota(int index)
+    {
+        agentsModel[index].kotaNow = agentsModel[index].Ancos.nextCity(agentsModel[index].kotaNow);
+    }
+
+    void UpdateNextKota(int i,int kotaTarget)
+    {
+        Debug.Log("semut-"+i + " pergi ke kota-" + kotaTarget);
          agents[i].GetComponent<MyAgent>().target =
                     kotaList[kotaTarget].transformKota;
-            
-        }
+         
     }
 
     bool JarakAgentKeKota(Vector3 _agent, Vector3 _target)
