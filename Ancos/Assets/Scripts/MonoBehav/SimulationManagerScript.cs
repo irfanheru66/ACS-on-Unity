@@ -99,7 +99,6 @@ public class SimulationManagerScript : MonoBehaviour
             pheromoneGlobal.Add(phe);
         }
         StartCoroutine(ExportToCSV("PheromoneGlobalAwal", pheromoneGlobal));
-        debug(pheromoneGlobal);
         /*ancos = new ANCOS(jarakAntarKota, 
             Constanta.beta, 
             kotaList,
@@ -224,7 +223,6 @@ public class SimulationManagerScript : MonoBehaviour
     IEnumerator ExportToCSV(string _namaFile, List<List<float>> _data)
     {
         // tentukan dulu alamat file
-        Debug.Log("yes");
 
         string alamatFile =
             Application.dataPath.Replace("/Assets", "") + "/" + _namaFile + ".csv";
@@ -244,7 +242,6 @@ public class SimulationManagerScript : MonoBehaviour
         {
             foreach (var item in items)
             {
-                Debug.Log(item);
                 data += item + " ,";
             }
             data += System.Environment.NewLine;

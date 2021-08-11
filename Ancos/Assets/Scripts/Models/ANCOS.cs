@@ -101,7 +101,7 @@ public class ANCOS
             if (_kotanow == kotaNotVisited[i].indexKota)
             {
                 string namaKota = kotaNotVisited[i].namaKota;
-                Debug.Log(namaKota);
+                /*Debug.Log(namaKota);*/
                 kotaVisited.Add(namaKota);
                 kotaNotVisited.RemoveAt(i);
                 break;
