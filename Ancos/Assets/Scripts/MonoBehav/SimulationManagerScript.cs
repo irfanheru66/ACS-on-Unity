@@ -14,7 +14,7 @@ using System.IO;
 public class SimulationManagerScript : MonoBehaviour
 {
     public GameObject agentPrefab;
-    public static int numAgents = MainMenuSystem._fixnumAnt;
+    public static int numAgents = ScreenSystem._fixnumAnt;
     public GameObject[] daftarKota;
     public List<ModelKota> kotaList = new List<ModelKota>();
     [SerializeField] List<MyAgent> agents = new List<MyAgent>();

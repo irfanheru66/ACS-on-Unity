@@ -321,6 +321,7 @@ GameObject:
   - component: {fileID: 492860622}
   - component: {fileID: 492860621}
   - component: {fileID: 492860620}
+  - component: {fileID: 492860623}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -393,6 +394,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &492860623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492860619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621db2756067eb9448f23c0be8804e35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &594435675
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +516,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0f09b4b7d991547bb38fd69a85fd7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popUpBox: {fileID: 870227756}
+  popUpSetting: {fileID: 870227756}
+  popUpHome: {fileID: 0}
   a: 0
 --- !u!4 &656536604
 Transform:
@@ -824,8 +838,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 2
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 77a738c6be732f949ba692a31fccc7ec, type: 2}
-  m_sharedMaterial: {fileID: 1201590527070447726, guid: 77a738c6be732f949ba692a31fccc7ec, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -849,8 +863,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17
-  m_fontSizeBase: 17
+  m_fontSize: 13
+  m_fontSizeBase: 13
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -983,7 +997,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 656536603}
         m_TargetAssemblyTypeName: PopUpSystem, Assembly-CSharp
-        m_MethodName: PopUp
+        m_MethodName: PopUpSetting
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1115,7 +1129,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 656536603}
         m_TargetAssemblyTypeName: PopUpSystem, Assembly-CSharp
-        m_MethodName: PopUp
+        m_MethodName: PopUpSetting
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1247,7 +1261,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 67789124}
   m_Direction: 0
   m_MinValue: 2
-  m_MaxValue: 10
+  m_MaxValue: 9
   m_WholeNumbers: 0
   m_Value: 2
   m_OnValueChanged:
@@ -1275,6 +1289,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1364509886}
   - component: {fileID: 1364509885}
+  - component: {fileID: 1364509887}
+  - component: {fileID: 1364509888}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -1392,6 +1408,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1364509887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1364509884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b3fb497de6983640afc8fe440fa4ee9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1364509888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1364509884}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621db2756067eb9448f23c0be8804e35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1402142870
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,7 +1445,7 @@ GameObject:
   - component: {fileID: 1402142873}
   - component: {fileID: 1402142872}
   m_Layer: 5
-  m_Name: Bt_setting
+  m_Name: Bt_setting_disable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1473,19 +1513,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1402142873}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 656536603}
-        m_TargetAssemblyTypeName: PopUpSystem, Assembly-CSharp
-        m_MethodName: PopUp
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1402142873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1936,8 +1964,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -69.7, y: 20.6}
-  m_SizeDelta: {x: -266.29892, y: -94.52231}
+  m_AnchoredPosition: {x: -69.7, y: 18}
+  m_SizeDelta: {x: -266.2989, y: -104.14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1615785655
 MonoBehaviour:
@@ -1961,8 +1989,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Jumlah Semut
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 77a738c6be732f949ba692a31fccc7ec, type: 2}
-  m_sharedMaterial: {fileID: 1201590527070447726, guid: 77a738c6be732f949ba692a31fccc7ec, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1986,8 +2014,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 15
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
