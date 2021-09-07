@@ -12,6 +12,8 @@ using System.IO;
 /// </summary>
 public class SimulationManagerScript : MonoBehaviour
 {
+    public GameObject agentPrefab;
+    public static int numAgents = 2;
     public GameObject[] daftarKota;
     public List<ModelKota> kotaList = new List<ModelKota>();
     [SerializeField] List<MyAgent> agents = new List<MyAgent>();
@@ -37,7 +39,8 @@ public class SimulationManagerScript : MonoBehaviour
                 indexKota = i ,
                 namaKota = daftarKota[i].name,
                 transformKota = daftarKota[i].transform,
-                koordinatKota = daftarKota[i].transform.position
+                koordinatKota = daftarKota[i].transform.position,
+                rotationKota = daftarKota[i].transform.rotation,
 
             };
             kotaList.Add(m);
@@ -105,6 +108,12 @@ public class SimulationManagerScript : MonoBehaviour
             inversJarakAntarKota,
             pheromoneGlobal,
             kotaTarget);*/
+
+        for (int i = 0; i < numAgents; i++)
+        {
+            Instantiate(agentPrefab,kotaList[i].koordinatKota,kotaList[i].rotationKota);
+        }
+
         GameObject[] semut = GameObject.FindGameObjectsWithTag("agent");
         for (int i = 0; i < semut.Length; i++)
         {
@@ -124,7 +133,6 @@ public class SimulationManagerScript : MonoBehaviour
     
     private void Update()
     {
-
         
         for (int i = 0; i < agents.Count; i++)
         {
@@ -155,9 +163,11 @@ public class SimulationManagerScript : MonoBehaviour
                 Debug.Log("----------------semut ke-" + i + " -----------------");
                 debug(pheromoneGlobal);
                 StartCoroutine(ExportToCSV("PheromoneGlobalTerakhir", pheromoneGlobal));
+                SoundManagerScript.ringCongrats();
             }
             else if (JarakAgentKeKota(agents[i].transform.position, kotaList[agentsModel[i].kotaNow].koordinatKota))
             {
+                SoundManagerScript.ringBell();
                 nextKota(i);
                 UpdateNextKota(i, agentsModel[i].kotaNow);
             }

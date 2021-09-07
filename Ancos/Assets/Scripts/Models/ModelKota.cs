@@ -9,4 +9,5 @@ public class ModelKota
     public string namaKota;
     public Vector3 koordinatKota;
     public Transform transformKota;
+    internal Quaternion rotationKota;
 }
