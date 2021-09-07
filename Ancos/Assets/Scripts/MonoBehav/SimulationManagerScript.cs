@@ -166,6 +166,7 @@ public class SimulationManagerScript : MonoBehaviour
             }
             else if (JarakAgentKeKota(agents[i].transform.position, kotaList[agentsModel[i].kotaNow].koordinatKota))
             {
+                SoundManagerScript.ringBell();
                 nextKota(i);
                 UpdateNextKota(i, agentsModel[i].kotaNow);
             }
