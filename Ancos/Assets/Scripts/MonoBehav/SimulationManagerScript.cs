@@ -13,7 +13,7 @@ using System.IO;
 public class SimulationManagerScript : MonoBehaviour
 {
     public GameObject agentPrefab;
-    public int numAgents;
+    public static int numAgents = 2;
     public GameObject[] daftarKota;
     public List<ModelKota> kotaList = new List<ModelKota>();
     [SerializeField] List<MyAgent> agents = new List<MyAgent>();
