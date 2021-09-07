@@ -6,12 +6,16 @@ using UnityEngine.UI;
 
 public class SliderSystem : MonoBehaviour
 {
-    [SerializeField] private Slider antSlider;
+    [SerializeField] public static Slider antSlider;
 
     [SerializeField] private TextMeshProUGUI antText;
 
+    public static int _numAnt;
+
     public void AntSlider(float value)
     {
-        antText.text = (Mathf.RoundToInt(value)).ToString();
+        _numAnt = Mathf.RoundToInt(value);
+        antText.text = (_numAnt).ToString();
+        
     }
 }

@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: d1125d47a3bea59429601bceb0b44b11
+  - enabled: 1
+    path: Assets/Scenes/PEMSIS.unity
+    guid: 343f9afa471ed444b94df4daad67043e
   m_configObjects: {}
