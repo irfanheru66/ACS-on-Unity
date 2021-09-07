@@ -1,6 +1,7 @@
 ###
 # Unity folders and files
 ###
+!Ancos/Library
 [Aa]ssets/AssetStoreTools*
 [Bb]uild/
 [Ll]ibrary/
