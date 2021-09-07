@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using System.IO;
 
 /// <summary>
@@ -13,7 +14,7 @@ using System.IO;
 public class SimulationManagerScript : MonoBehaviour
 {
     public GameObject agentPrefab;
-    public static int numAgents = 2;
+    public static int numAgents = ScreenSystem._fixnumAnt;
     public GameObject[] daftarKota;
     public List<ModelKota> kotaList = new List<ModelKota>();
     [SerializeField] List<MyAgent> agents = new List<MyAgent>();
@@ -28,6 +29,7 @@ public class SimulationManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Debug.Log("xxxxxxxxxJumlah Semut : " + SliderSystem._numAnt);
         // menghimpun kota-kota
         daftarKota = GameObject.FindGameObjectsWithTag("kota");
 
