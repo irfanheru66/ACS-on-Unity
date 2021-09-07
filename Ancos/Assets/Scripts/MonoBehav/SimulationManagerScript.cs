@@ -163,6 +163,7 @@ public class SimulationManagerScript : MonoBehaviour
                 Debug.Log("----------------semut ke-" + i + " -----------------");
                 debug(pheromoneGlobal);
                 StartCoroutine(ExportToCSV("PheromoneGlobalTerakhir", pheromoneGlobal));
+                SoundManagerScript.ringCongrats();
             }
             else if (JarakAgentKeKota(agents[i].transform.position, kotaList[agentsModel[i].kotaNow].koordinatKota))
             {
