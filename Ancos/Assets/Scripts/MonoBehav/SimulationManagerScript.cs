@@ -133,7 +133,6 @@ public class SimulationManagerScript : MonoBehaviour
     
     private void Update()
     {
-
         
         for (int i = 0; i < agents.Count; i++)
         {
